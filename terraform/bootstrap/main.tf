@@ -1,7 +1,6 @@
 # S3 Bucket for State
 resource "aws_s3_bucket" "tf_state" {
   bucket        = "${var.project_name}-tf-state"
-  force_destroy = false # Protects against accidental deletion of state
 }
 
 # Enable Versioning (to recover from accidental deletions/overwrites)
