@@ -1,0 +1,18 @@
+---
+- name: Install Nginx
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+
+- name: Start and enable Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Deploy web page
+  ansible.builtin.copy:
+    src: index.html 
+    dest: /usr/share/nginx/html/index.html
+    mode: '0644'
+  notify: Restart Nginx
