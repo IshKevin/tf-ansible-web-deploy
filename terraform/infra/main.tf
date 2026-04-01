@@ -58,3 +58,12 @@ resource "aws_instance" "web" {
     Name = "${var.project_name}-webserver"
   }
 }
+
+
+resource "local_file" "ansible_inventory" {
+  content = templatefile("${path.module}/inventory.tftpl", {
+    ip_address = aws_instance.web.public_ip,
+    key_path   = "../terraform/infra/${aws_key_pair.generated.key_name}.pem"
+  })
+  filename = "../../ansible/inventory.ini"
+}
