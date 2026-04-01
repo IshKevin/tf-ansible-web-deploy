@@ -1,15 +1,18 @@
+# S3 Bucket for State
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "${var.project_name}-tf-state"
+  bucket        = "${var.project_name}-tf-state"
+  force_destroy = false # Protects against accidental deletion of state
 }
 
+# Enable Versioning (to recover from accidental deletions/overwrites)
 resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.tf_state.id
-
   versioning_configuration {
     status = "Enabled"
   }
 }
 
+# Default Encryption
 resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
   bucket = aws_s3_bucket.tf_state.id
 
@@ -20,6 +23,16 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
   }
 }
 
+# Block all public access (Security Best Practice)
+resource "aws_s3_bucket_public_access_block" "public_access" {
+  bucket                  = aws_s3_bucket.tf_state.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# DynamoDB for State Locking
 resource "aws_dynamodb_table" "tf_lock" {
   name         = "${var.project_name}-lock"
   billing_mode = "PAY_PER_REQUEST"
