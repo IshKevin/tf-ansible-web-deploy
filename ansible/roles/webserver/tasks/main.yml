@@ -1,13 +1,13 @@
 ---
 - name: Enable Nginx from Amazon Linux Extras
   ansible.builtin.command: amazon-linux-extras enable nginx1
-  changed_when: false # Prevents Ansible from saying "changed" every time you run it
+  changed_when: false 
 
 - name: Install Nginx
   ansible.builtin.package:
     name: nginx
     state: present
-    update_cache: true # Like running 'yum check-update' first
+    update_cache: true
 
 - name: Start and enable Nginx
   ansible.builtin.service:
