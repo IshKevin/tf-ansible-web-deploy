@@ -49,7 +49,7 @@ resource "local_file" "private_key" {
 }
 
 resource "aws_instance" "web" {
-  ami                    = var.ami_id
+  ami                    = data.aws_ami.amazon_linux.id
   instance_type          = var.instance_type
   key_name               = aws_key_pair.generated.key_name
   vpc_security_group_ids = [aws_security_group.web_sg.id]
